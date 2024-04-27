@@ -2,6 +2,7 @@ package com.roberto.algafood.jpa;
 
 import com.roberto.algafood.AlgafoodApiApplication;
 import com.roberto.algafood.domain.model.Cozinha;
+import com.roberto.algafood.domain.repository.CozinhaRepository;
 import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ApplicationContext;
@@ -14,15 +15,15 @@ public class InclusaoCozinhaMain {
                 .web(WebApplicationType.NONE)
                 .run(args);
 
-        CadastroCozinha cadastroCozinha = applicationContext.getBean(CadastroCozinha.class);
+        CozinhaRepository cozinhaRepository = applicationContext.getBean(CozinhaRepository.class);
         Cozinha cozinhaBrasileira = new Cozinha();
         cozinhaBrasileira.setNome("Brasileira");
 
         Cozinha cozinhaJaponesa = new Cozinha();
         cozinhaJaponesa.setNome("Japonesa");
 
-        cozinhaBrasileira = cadastroCozinha.salvar(cozinhaBrasileira);
-        cozinhaJaponesa = cadastroCozinha.salvar(cozinhaJaponesa);
+        cozinhaBrasileira = cozinhaRepository.salvar(cozinhaBrasileira);
+        cozinhaJaponesa = cozinhaRepository.salvar(cozinhaJaponesa);
 
         System.out.printf("%d - %s\n", cozinhaBrasileira.getId(), cozinhaBrasileira.getNome());
         System.out.printf("%d - %s\n", cozinhaJaponesa.getId(), cozinhaJaponesa.getNome());
