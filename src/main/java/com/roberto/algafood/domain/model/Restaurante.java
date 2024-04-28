@@ -1,5 +1,6 @@
 package com.roberto.algafood.domain.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -19,6 +20,7 @@ public class Restaurante {
     @Column(nullable = false)
     private String nome;
 
+    @JsonIgnore
     @Column(name = "taxa_frete", nullable = false)
     private BigDecimal taxaFrete;
 
