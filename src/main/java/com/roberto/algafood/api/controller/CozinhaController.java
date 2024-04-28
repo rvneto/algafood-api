@@ -33,13 +33,10 @@ public class CozinhaController {
     @GetMapping(value = "/{cozinhaId}")
     public ResponseEntity<Cozinha> buscar(@PathVariable("cozinhaId") Long id) {
         Cozinha cozinha = cozinhaRepository.buscar(id);
-        // return ResponseEntity.status(HttpStatus.OK).body(cozinha);
-        return ResponseEntity.ok(cozinha);
-
-//        HttpHeaders headers = new HttpHeaders();
-//        headers.add(HttpHeaders.LOCATION, "http://localhost:8080/cozinhas");
-//        return ResponseEntity.status(HttpStatus.FOUND)
-//                .headers(headers)
-//                .build();
+        if (cozinha != null) {
+            return ResponseEntity.ok(cozinha);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 }
