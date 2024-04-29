@@ -1,5 +1,6 @@
 package com.roberto.algafood.api.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.roberto.algafood.domain.exception.EntidadeNaoEncontradaException;
 import com.roberto.algafood.domain.model.Restaurante;
 import com.roberto.algafood.domain.repository.RestauranteRepository;
@@ -8,8 +9,10 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.ReflectionUtils;
 import org.springframework.web.bind.annotation.*;
 
+import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
 
@@ -78,8 +81,15 @@ public class RestauranteController {
     }
 
     private void merge(Map<String, Object> camposOrigem, Restaurante restauranteDestino) {
-        camposOrigem.forEach((nomePropriedade, valorPropriedade) -> {
+        ObjectMapper objectMapper = new ObjectMapper();
+        Restaurante restauranteOrigem = objectMapper.convertValue(camposOrigem, Restaurante.class);
 
+        camposOrigem.forEach((nomePropriedade, valorPropriedade) -> {
+            Field field = ReflectionUtils.findField(Restaurante.class, nomePropriedade);
+            assert field != null;
+            field.setAccessible(true);
+            Object novoValor = ReflectionUtils.getField(field, restauranteOrigem);
+            ReflectionUtils.setField(field, restauranteDestino, novoValor);
         });
     }
 
