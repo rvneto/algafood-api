@@ -1,5 +1,6 @@
 package com.roberto.algafood.api.controller;
 
+import com.roberto.algafood.domain.exception.EntidadeNaoEncontradaException;
 import com.roberto.algafood.domain.model.Cozinha;
 import com.roberto.algafood.domain.repository.CozinhaRepository;
 import com.roberto.algafood.domain.service.CadastroCozinhaService;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -56,6 +58,10 @@ public class CozinhaController {
     @DeleteMapping("/{cozinhaId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void remover(@PathVariable("cozinhaId") Long id) {
-        cadastroCozinhaService.remover(id);
+        try {
+            cadastroCozinhaService.remover(id);
+        } catch (EntidadeNaoEncontradaException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
     }
 }
