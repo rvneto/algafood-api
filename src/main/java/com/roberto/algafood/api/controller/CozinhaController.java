@@ -1,7 +1,5 @@
 package com.roberto.algafood.api.controller;
 
-import com.roberto.algafood.domain.exception.EntidadeEmUsoException;
-import com.roberto.algafood.domain.exception.EntidadeNaoEncontradaException;
 import com.roberto.algafood.domain.model.Cozinha;
 import com.roberto.algafood.domain.repository.CozinhaRepository;
 import com.roberto.algafood.domain.service.CadastroCozinhaService;
@@ -56,14 +54,8 @@ public class CozinhaController {
     }
 
     @DeleteMapping("/{cozinhaId}")
-    public ResponseEntity<Cozinha> remover(@PathVariable("cozinhaId") Long id) {
-        try {
-            cadastroCozinhaService.remover(id);
-            return ResponseEntity.noContent().build();
-        } catch (EntidadeEmUsoException e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).build();
-        } catch (EntidadeNaoEncontradaException e) {
-            return ResponseEntity.notFound().build();
-        }
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void remover(@PathVariable("cozinhaId") Long id) {
+        cadastroCozinhaService.remover(id);
     }
 }
