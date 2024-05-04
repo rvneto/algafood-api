@@ -1,7 +1,5 @@
 package com.roberto.algafood.api.controller;
 
-import com.roberto.algafood.api.exceptionhandler.Problema;
-import com.roberto.algafood.domain.exception.EntidadeNaoEncontradaException;
 import com.roberto.algafood.domain.exception.EstadoNaoEncontradoException;
 import com.roberto.algafood.domain.exception.NegocioException;
 import com.roberto.algafood.domain.model.Cidade;
@@ -10,10 +8,8 @@ import com.roberto.algafood.domain.service.CadastroCidadeService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -66,15 +62,6 @@ public class CidadeController {
         cadastroCidade.excluir(cidadeId);
     }
 
-    @ExceptionHandler(EntidadeNaoEncontradaException.class)
-    public ResponseEntity<?> tratarEntidadeNaoEncotradoException(EntidadeNaoEncontradaException e) {
-        Problema problema = Problema.builder()
-                .dataHora(LocalDateTime.now())
-                .mensagem(e.getMessage())
-                .build();
 
-        return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                .body(problema);
-    }
 
 }
