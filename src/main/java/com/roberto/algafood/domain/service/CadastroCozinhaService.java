@@ -1,7 +1,7 @@
 package com.roberto.algafood.domain.service;
 
+import com.roberto.algafood.domain.exception.CozinhaNaoEncontradaException;
 import com.roberto.algafood.domain.exception.EntidadeEmUsoException;
-import com.roberto.algafood.domain.exception.EntidadeNaoEncontradaException;
 import com.roberto.algafood.domain.model.Cozinha;
 import com.roberto.algafood.domain.repository.CozinhaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,8 +12,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class CadastroCozinhaService {
 
-    public static final String MSG_COZINHA_NAO_ENCONTRADA = "Não existe um cadastro de cozinha com código %d";
-    public static final String MSG_COZINHA_EM_USO = "Cozinha de código %d não pode ser removida, pois está em uso";
+    private static final String MSG_COZINHA_EM_USO
+            = "Cozinha de código %d não pode ser removida, pois está em uso";
+
     @Autowired
     private CozinhaRepository cozinhaRepository;
 
@@ -21,18 +22,22 @@ public class CadastroCozinhaService {
         return cozinhaRepository.save(cozinha);
     }
 
-    public void remover(Long id) {
+    public void excluir(Long cozinhaId) {
         try {
-            cozinhaRepository.deleteById(id);
+            cozinhaRepository.deleteById(cozinhaId);
+
         } catch (EmptyResultDataAccessException e) {
-            throw new EntidadeNaoEncontradaException(String.format(MSG_COZINHA_NAO_ENCONTRADA, id));
+            throw new CozinhaNaoEncontradaException(cozinhaId);
+
         } catch (DataIntegrityViolationException e) {
-            throw new EntidadeEmUsoException(String.format(MSG_COZINHA_EM_USO, id));
+            throw new EntidadeEmUsoException(
+                    String.format(MSG_COZINHA_EM_USO, cozinhaId));
         }
     }
 
-    public Cozinha buscarOuFalhar(Long id) {
-        return cozinhaRepository.findById(id)
-                .orElseThrow(() -> new EntidadeNaoEncontradaException(String.format(MSG_COZINHA_NAO_ENCONTRADA, id)));
+    public Cozinha buscarOuFalhar(Long cozinhaId) {
+        return cozinhaRepository.findById(cozinhaId)
+                .orElseThrow(() -> new CozinhaNaoEncontradaException(cozinhaId));
     }
+
 }
